@@ -3,10 +3,16 @@ const serverless = require('serverless-http');
 const express = require('express');
 const { connectToDatabase } = require('./config'); // Import the connectToDatabase function from your config module
 const bodyParser = require('body-parser');
-
+const cors = require('cors');
 // Create an Express application
 const app = express();
 
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+}));
 // Connect to the MongoDB database
 connectToDatabase();
 
