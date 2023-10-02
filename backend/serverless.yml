@@ -4,6 +4,7 @@ provider:
   name: aws
   runtime: nodejs16.x
   stage: dev
+  timeout: 30
 
 functions:
   api:
@@ -19,3 +20,5 @@ plugins:
 custom:
   serverless-offline:
     httpPort: 4000
+
+

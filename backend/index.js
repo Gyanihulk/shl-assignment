@@ -37,4 +37,4 @@ const Routes = require("./routes");
 app.use("/", Routes);
 
 // Export the Express app wrapped with the serverless function for AWS Lambda
-module.exports.handler = serverless(app);
+module.exports.handler = serverless(app, { callbackWaitsForEmptyEventLoop: false });

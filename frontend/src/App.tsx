@@ -1,6 +1,7 @@
 import  { useState, useEffect } from "react";
 import Navbar from "./components/Navbar";
 import CardContainer from "./components/CardContainer";
+import NavbarNLP from "./components/NavbarNLP";
 
 interface Project {
   _id:string;
@@ -17,7 +18,6 @@ function App(){
   const [myOptions, setMyOptions] = useState<Project[]>([]);
 
   const getDataFromAPI = (filterType: string, searchTerm: string) => {
-    
     const data: any = {};
     if (filterType !== "All") {
       data[filterType] = searchTerm;
@@ -39,7 +39,26 @@ function App(){
         setMyOptions([]);
       });
   };
+  const getDataFromNLPAPI = (type: string, searchquery: string) => {
+    const data = {"query":searchquery,type};
 
+    // Replace 'http://localhost:4000/' with your API endpoint
+    fetch(import.meta.env.VITE_BACKEND_URL+"/naturalquery", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((data: Project[]) => {
+        setMyOptions(data); // Set all options
+      })
+      .catch((error) => {
+        console.error("There was a problem with the fetch operation:", error);
+        setMyOptions([]);
+      });
+  };
   useEffect(() => {
     getDataFromAPI("All", "");
   }, []); // Fetch data on component mount
@@ -49,9 +68,15 @@ function App(){
     await getDataFromAPI(filterType, searchTerm);
   };
 
+  const handleSearchNLP = async (filterType: string, searchTerm: string) => {
+    // Perform filtering based on filterType and searchTerm
+    await getDataFromNLPAPI(filterType, searchTerm);
+  };
+
   return (
     <>
-      <Navbar onSearch={handleSearch} />
+      {/* <Navbar onSearch={handleSearch} /> */}
+      <NavbarNLP onSearch={handleSearchNLP}/>
       <CardContainer cardsData={myOptions} />
     </>
   );
